@@ -65,6 +65,7 @@ solarSystemRouter.route('/:solarSystemId')
     console.log(`Solar System ID: ${req.params.solarSystemId}`)
     next()
 })
+
 .get((req, res, next) => {
     const ssId = req.params.solarSystemId
     const ssData = utils.getSolarSystems(ssId, rawData)
@@ -72,21 +73,39 @@ solarSystemRouter.route('/:solarSystemId')
     res.json(ssData)
     // res.end('Will send details of the solar system \'' + req.params.solarSystemId + '\' to you.')
 })
+
 .post((req, res, next) => {
     // Add a status code which will overwrite the one set earlier
     res.statusCode = 403
     res.end("POST operation not supported on /solarSystem/'" + req.params.solarSystemId + "'")
 })
 
-
-// ALL THE ABOVE ARE COMPLETE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
 .put((req, res, next) => {
-    // Use res.write() as many times as required to write long messages
-    res.write('Updating the solar system: ' + req.params.solarSystemId + '\n')
-    res.end('Will update the solar system: ' + req.body.name + ' with details: ' + req.body.description)
+    // Change the name of the solar system
+    const ssId = req.params.solarSystemId
+
+    if (req.body.id == ssId) {
+        // Body matches request parameter
+        const updatedData = utils.updateSolarSystem(ssId, req.body.name, rawData)
+        if (updatedData[0]) {
+            rawData = updatedData[1]
+            res.setHeader('Content-Type', 'application/json')
+            res.json(updatedData[2])
+        } else {
+            res.statusCode = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({"Error": "Error updating solar system '" + ssId + "', it does not exist"})
+        }
+    } else {
+        // Body/parameter mismatch
+        res.statusCode = 400
+        res.setHeader('Content-Type', 'application/json')
+        res.json({"Error": "Mismatch!  Body Id: '" + req.body.id + "', URL parameter: '" + ssId + "'"})
+    }
+    // res.write('Updating the solar system: ' + req.params.solarSystemId + '\n')
+    // res.end('Will update the solar system: ' + req.body.id + ' with details: ' + req.body.name)
 })
+
 .delete((req, res, next) => {
     // Delete selected solar system
     const ssId = req.params.solarSystemId
@@ -105,6 +124,7 @@ solarSystemRouter.route('/:solarSystemId')
 
 
 
+
 // #################################################
 solarSystemRouter.route('/:solarSystemId/weight')
 // #################################################
@@ -115,9 +135,21 @@ solarSystemRouter.route('/:solarSystemId/weight')
     next()
 })
 .get((req, res, next) => {
-    res.write('Solar System: ' + req.params.solarSystemId + '\n')
-    res.end('Has a weight of ' + 'YYYYYYY tons' )
+    // Return just the weight of the specified solar system
+    const ssId = req.params.solarSystemId
+    const newData = utils.getSolarSystemWeight(ssId, rawData)
+    if (newData[0]) {
+        res.setHeader('Content-Type', 'application/json')
+        res.json(newData[1])
+    } else {
+        res.statusCode = 404
+        res.setHeader('Content-Type', 'application/json')
+        res.json({"Error": "Error calculating weight of solar system '" + ssId + "', it does not exist"})
+    }
+    // res.write('Solar System: ' + req.params.solarSystemId + '\n')
+    // res.end('Has a weight of ' + 'YYYYYYY tons' )
 })
+
 .post((req, res, next) => {
     // Add a status code which will overwrite the one set earlier
     res.statusCode = 403
@@ -133,6 +165,10 @@ solarSystemRouter.route('/:solarSystemId/weight')
     res.statusCode = 403
      res.end('DELETE operation not supported on /solarSystem/' + req.params.solarSystemId + '/weight')
 })
+
+
+// ALL THE ABOVE ARE COMPLETE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 
 solarSystemRouter.route('/:solarSystemId/planet')

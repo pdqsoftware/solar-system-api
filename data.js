@@ -2,7 +2,7 @@
 const rawData = [
     {
         "id": 1,
-        "name": "Our Solar Syatem",
+        "name": "Our Solar System",
         "entities": [
             {
                 "id": "11",

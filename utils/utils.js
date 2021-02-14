@@ -71,15 +71,62 @@ module.exports = {
             let newRawData = []
             rawData.forEach((ss) => {
                 if (ss.id != solarSystemId) {
-                    // Add to new array
-                    console.log(`Adding: ${ss.id}`)
+                    // Add to new array 
                     newRawData.push(ss)
                 }
             })
             // rawData = newRawData
-            return ([true, newRawData])
+            return ([true, newRawData, ])
         }
         return ([false, undefined])
+    },
+    updateSolarSystem(solarSystemId, solarSystemName, rawData) {
+        // Updates name of solar system
+        const foundIt = !!rawData.find(x => x.id == solarSystemId)
+        if (foundIt) {
+            // Update it
+            let updatedRawData = []
+            let updatedObject = {}
+            rawData.forEach((ss) => {
+                if (ss.id == solarSystemId) {
+                    // Match - update it and add to array and object
+                    console.log(`Adding: ${ss.id}`)
+                    ss.name = solarSystemName
+                    ss.totalWeight = calculateTotalWeight(ss.entities)
+                    updatedRawData.push(ss)
+                    updatedObject = Object.assign({}, ss)
+                } else {
+                    // Add to new array
+                    updatedRawData.push(ss)
+                }
+            })
+            return ([true, updatedRawData, updatedObject])
+        } else {
+            // Solar system not on record
+            return ([false, undefined, undefined])
+        }
+    },
+    getSolarSystemWeight(solarSystemId, rawData) {
+        // Return the id, name and weight of the solar system
+        // Make sure it exists
+        const foundIt = !!rawData.find(x => x.id == solarSystemId)
+        if (foundIt) {
+            let updatedObject = {}
+            // Calculate weight
+            rawData.forEach((ss) => {
+                if (ss.id == solarSystemId) {
+                    // Match
+                    updatedObject = Object.assign({}, ss)
+                    console.log(`Calculating: ${updatedObject.id}`)
+                    ss.totalWeight = calculateTotalWeight(updatedObject.entities)
+                    delete updatedObject.entities
+                }
+            })
+            return([true, updatedObject])
+        } else {
+            return ([false, undefined])
+        }
+
     }
     
 }
