@@ -23,7 +23,7 @@ solarSystemRouter.route('/')
 })
 // Called by next() and useful for setting up the body of the responce
 .get((req, res, next) => {
-    const ssData = utils.getSolarSystems('1')
+    const ssData = utils.getSolarSystems('')
     res.setHeader('Content-Type', 'application/json')
 
     res.json(ssData)
@@ -54,13 +54,20 @@ solarSystemRouter.route('/')
 
 solarSystemRouter.route('/:solarSystemId')
 
+
 // This handles ALL calls, no matter what the verb, for the /solarSystem/:solarSystemId type API
 .all((req, res, next) => {
+    // console.log(`Solar System ID: ${req.params.solarSystemId}`)
     console.log(`Solar System ID: ${req.params.solarSystemId}`)
     next()
 })
 .get((req, res, next) => {
-    res.end('Will send details of the solar system \'' + req.params.solarSystemId + '\' to you.')
+    // res.end('Will send details of the solar system \'' + req.params.solarSystemId + '\' to you.')
+    const ssId = req.params.solarSystemId
+    const ssData = utils.getSolarSystems(ssId)
+    res.setHeader('Content-Type', 'application/json')
+
+    res.json(ssData)
 })
 .post((req, res, next) => {
     // Add a status code which will overwrite the one set earlier

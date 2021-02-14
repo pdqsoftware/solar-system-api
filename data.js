@@ -28,31 +28,33 @@ const rawData = [
                 "weight": 999999,
                 "type": "star"
             }
-        ]
+        ],
+        "totalWeight": 0
     },
     {
-        "id": 2,
-        "name": "Anotehr Solar System",
+        "id": 4,
+        "name": "Another Solar System",
         "entities": [
             {
-                "id": "21",
+                "id": "41",
                 "name": "Planet Zog",
                 "weight": 444,
                 "type": "planet"
             },
             {
-                "id": "22",
+                "id": "42",
                 "name": "Garlinga",
                 "weight": 333,
                 "type": "planet"
             },
             {
-                "id": "23",
+                "id": "43",
                 "name": "Hatherlingum",
                 "weight": 88888,
                 "type": "star"
             }
-        ]
+        ],
+        "totalWeight": 0
     }
 ]
 
