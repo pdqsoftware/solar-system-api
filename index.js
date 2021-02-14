@@ -13,6 +13,8 @@ const app = express()
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 
+// let rawData = require('./data');
+
 // Tell app to use solarSystemRouter when processing calls requesting /solarSystem
 // So all of the app functions below can be removed and placed inside dishRouter.js
 app.use('/solarSystem', solarSystemRouter)

@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 
-const rawData = require('../data');
+let rawData = require('../data');
 const utils = require('../utils/utils')
 
 const solarSystemRouter = express.Router()
@@ -23,37 +23,41 @@ solarSystemRouter.route('/')
 })
 // Called by next() and useful for setting up the body of the responce
 .get((req, res, next) => {
-    const ssData = utils.getSolarSystems('')
+    console.log(`raw: ${rawData}`)
+    const ssData = utils.getSolarSystems('', rawData)
     res.setHeader('Content-Type', 'application/json')
-
     res.json(ssData)
-    // res.end('Will send details of all the solar systems to you!')
+    // res.end('Will send details of ALL the solar systems to you!')
 })
 .post((req, res, next) => {
-    // Will contain a body in json format
-    // The body must include a name and description properties
-    res.end('Will add the solar system: ' + req.body.name + ' with Details: ' + req.body.description)
+    // Add a new solar system
+    // Will contain a body in json format, which must include Id and name properties
+    const ssId = req.body.id
+    const ssName = req.body.name
+    const ssData = utils.addSolarSystem(ssId, ssName, rawData)
+    res.setHeader('Content-Type', 'application/json')
+    res.json(ssData)
+    // res.end('Will add the solar system: \'' + ssName + '\', with an Id: ' + ssId)
 })
 .put((req, res, next) => {
-    // Add a status code which will overwrite the one set earlier
-    //
-    //
-    // Check new code below works OK!!!!
-    //
-    //
-    // res.statusCode = 403
-    // res.end('PUT operation not supported on /solarSystem')
+    // Update an existing solar system - not used
     res.status(403).send('PUT operation not supported on /solarSystem')
 })
 .delete((req, res, next) => {
-    // Return a simple response
-    res.end('Deleting all the solar systems!!!')
+    // Delete ALL solar systems
+    rawData = []
+    res.setHeader('Content-Type', 'application/json')
+    res.json(rawData)
+    // res.end('Deleting ALL the solar systems!!!')
 })
 
 
 
-solarSystemRouter.route('/:solarSystemId')
 
+
+// #################################################
+solarSystemRouter.route('/:solarSystemId')
+// #################################################
 
 // This handles ALL calls, no matter what the verb, for the /solarSystem/:solarSystemId type API
 .all((req, res, next) => {
@@ -62,30 +66,48 @@ solarSystemRouter.route('/:solarSystemId')
     next()
 })
 .get((req, res, next) => {
-    // res.end('Will send details of the solar system \'' + req.params.solarSystemId + '\' to you.')
     const ssId = req.params.solarSystemId
-    const ssData = utils.getSolarSystems(ssId)
+    const ssData = utils.getSolarSystems(ssId, rawData)
     res.setHeader('Content-Type', 'application/json')
-
     res.json(ssData)
+    // res.end('Will send details of the solar system \'' + req.params.solarSystemId + '\' to you.')
 })
 .post((req, res, next) => {
     // Add a status code which will overwrite the one set earlier
     res.statusCode = 403
-    res.end('POST operation not supported on /solarSystem/' + req.params.solarSystemId)
+    res.end("POST operation not supported on /solarSystem/'" + req.params.solarSystemId + "'")
 })
+
+
+// ALL THE ABOVE ARE COMPLETE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 .put((req, res, next) => {
     // Use res.write() as many times as required to write long messages
     res.write('Updating the solar system: ' + req.params.solarSystemId + '\n')
     res.end('Will update the solar system: ' + req.body.name + ' with details: ' + req.body.description)
 })
 .delete((req, res, next) => {
-    // Return a simple response
-    res.end('Deleting solar system: ' + req.params.solarSystemId)
+    // Delete selected solar system
+    const ssId = req.params.solarSystemId
+    const newData = utils.deleteSolarSystem(ssId, rawData)
+    if (newData[0]) {
+        // If success then update raw data and nothing else
+        rawData = newData[1]
+        res.end()
+    } else {
+        res.statusCode = 404
+        res.setHeader('Content-Type', 'application/json')
+        res.json({"Error": "Error deleting solar system '" + ssId + "', it does not exist"})
+    }
 })
 
 
+
+
+// #################################################
 solarSystemRouter.route('/:solarSystemId/weight')
+// #################################################
 
 // This handles ALL calls, no matter what the verb, for the /solarSystem/:solarSystemId/planet/:planetId type API
 .all((req, res, next) => {

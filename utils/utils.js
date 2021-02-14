@@ -1,8 +1,8 @@
-const { forEach } = require("../data")
-const rawData = require("../data")
+// const { forEach } = require("../data")
+// const rawData = require("../data")
 
 module.exports = { 
-    getSolarSystems(solarSystem) {
+    getSolarSystems(solarSystem, rawData) {
         let returnData = []
         const noOfSolarSystems = rawData.length
 
@@ -41,6 +41,45 @@ module.exports = {
             // No data found for this solar system Id
             return {}
         }
+    },
+    addSolarSystem(solarSystemId, solarSystemName, rawData) {
+        // Add a new solar system to the existing data
+        // Make sure it doesn't already exist!
+        console.log(solarSystemId)
+        console.log(rawData)
+        const foundIt = !!rawData.find(x => x.id == solarSystemId)
+
+        if (!foundIt) {
+            // Add it
+            const newSolarSystem = {
+                id: solarSystemId,
+                name: solarSystemName,
+                entities: [],
+                totalWeight: 0
+            }
+            rawData.push(newSolarSystem)
+            return newSolarSystem
+        }
+        return {"Error": "Entered solar system Id already exists"}
+    },
+    deleteSolarSystem(solarSystemId, rawData) {
+        // Delete specified solar system
+        // Make sure it really exists
+        const foundIt = !!rawData.find(x => x.id == solarSystemId)
+        if (foundIt) {
+            // Delete it
+            let newRawData = []
+            rawData.forEach((ss) => {
+                if (ss.id != solarSystemId) {
+                    // Add to new array
+                    console.log(`Adding: ${ss.id}`)
+                    newRawData.push(ss)
+                }
+            })
+            // rawData = newRawData
+            return ([true, newRawData])
+        }
+        return ([false, undefined])
     }
     
 }
