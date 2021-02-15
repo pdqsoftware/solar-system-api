@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 // Import the Solar System router file
 const solarSystemRouter = require('./routes/solarSystemRouter')
 
-const hostname = 'localhost'
+// const hostname = 'localhost'  // Need to change??
 const port = process.env.PORT || 3030
 
 const app = express()
@@ -33,5 +33,6 @@ app.use((req, res, next) => {
 
 // Using Express has the added advantage of not requiring the http module
 app.listen(port, hostname, () => {
-    console.log(`Solar System API server running at http://${hostname}:${port}`)
+    // console.log(`Solar System API server running at http://${hostname}:${port}`)
+    console.log(`Solar System API server running on port ${port}`)
 })
