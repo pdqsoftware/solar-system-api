@@ -32,7 +32,8 @@ app.use((req, res, next) => {
 
 
 // Using Express has the added advantage of not requiring the http module
-app.listen(port, hostname, () => {
+// app.listen(port, hostname, () => {
+app.listen(port, () => {
     // console.log(`Solar System API server running at http://${hostname}:${port}`)
     console.log(`Solar System API server running on port ${port}`)
 })
