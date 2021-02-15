@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const solarSystemRouter = require('./routes/solarSystemRouter')
 
 const hostname = 'localhost'
-const port = 3030
+const port = process.env.PORT || 3030
 
 const app = express()
 app.use(morgan('dev'))
