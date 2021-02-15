@@ -1,7 +1,8 @@
 {
-  "name": "node-express",
+  "name": "solar-system-api",
   "version": "1.0.0",
-  "description": "Node Express Examples",
+  "description": "API returning details of multiple solar systems",
+  "homepage": "https://pdqsoftware.github.io/solar-system-api",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
