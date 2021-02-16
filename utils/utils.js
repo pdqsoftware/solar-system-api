@@ -1,15 +1,12 @@
-// const { forEach } = require("../data")
-// const rawData = require("../data")
-
 module.exports = { 
     getSolarSystems(solarSystem, rawData) {
         let returnData = []
         const noOfSolarSystems = rawData.length
-        console.log(`Number of solar systems stored: ${noOfSolarSystems}`)
+        // console.log(`Number of solar systems stored: ${noOfSolarSystems}`)
 
         // Return all details of all solar systems
         if (solarSystem === '') {
-            // Calculate weights
+            // Calculate weights and add to data
             rawData.forEach((ss) => {
                 ss.totalWeight = calculateTotalWeight(ss.entities)
             })
@@ -21,9 +18,7 @@ module.exports = {
             let found = -1;
             // Loop through object entries inside array
             rawData.forEach((ss, index) => {
-                console.log(`ssId: ${ss.id}`)
                 if (ss.id == solarSystem) {
-                    console.log('match')
                     found = index
                     rawData[found].totalWeight = calculateTotalWeight(ss.entities)
                 }
@@ -35,11 +30,11 @@ module.exports = {
             return {}
         }
     },
+
     addSolarSystem(solarSystemId, solarSystemName, rawData) {
         // Add a new solar system to the existing data
         // Make sure it doesn't already exist!
         const foundIt = !!rawData.find(x => x.id == solarSystemId)
-
         if (!foundIt) {
             // Add it
             const newSolarSystem = {
@@ -53,25 +48,19 @@ module.exports = {
         }
         return {"Error": "Entered solar system Id already exists"}
     },
+
     addPlanet(solarSystemId, planetData, rawData) {
         // Add a new planet to specified solar system
-        console.log(solarSystemId)
-        console.log(planetData)
         // Check the solar system exists
         const foundIt = !!rawData.find(x => x.id == solarSystemId)
-        console.log(`FountIt: ${foundIt}`)
         if (foundIt) {
             // Solar system match - check planet doesn't already exist
-            console.log('Inside foundIt')
-
             let errorText = ''
             rawData.forEach((ss) => {
                 if (ss.id == solarSystemId) {
                     // Match on solar system
                     // Does planet already exist?
                     const foundPlanet = !!ss.entities.find(x => x.id == planetData.id)
-                    console.log(`foundPlanet: ${foundPlanet}`)
-
                     if (foundPlanet) {
                         errorText = "Planet with Id '" + planetData.id + "' already exists in solar system '" + solarSystemId + "'"
                     } else {
@@ -90,6 +79,7 @@ module.exports = {
         return ([false, 'Solar system \'' + solarSystemId + '\' does not exist'])
 
     },
+
     deleteSolarSystem(solarSystemId, rawData) {
         // Delete specified solar system
         // Make sure it really exists
@@ -103,11 +93,11 @@ module.exports = {
                     newRawData.push(ss)
                 }
             })
-            // rawData = newRawData
             return ([true, newRawData, ])
         }
         return ([false, undefined])
     },
+
     deletePlanet(solarSystemId, planetId, rawData) {
         // Delete planet(s) from solar system
         let newData = []
@@ -129,9 +119,7 @@ module.exports = {
 
                             copySolarSystem.entities = ss.entities.filter((entity) => {
                                 return !(entity.id == planetId)
-                            }) 
-
-                            
+                            })
                             newData.push(copySolarSystem)
                         } else {
                             errorText = "Planet '" + planetId + "' doesn't exist in solar system '" + ss.id + "'"
@@ -150,8 +138,6 @@ module.exports = {
              if (errorText) {
                  return ([false, errorText])
              }
-             console.log('Returning newData')
-             console.log(newData)
              return ([true, newData])
 
          } else {
@@ -159,8 +145,10 @@ module.exports = {
          }
 
     },
+
     updateSolarSystem(solarSystemId, solarSystemName, rawData) {
-        // Updates name of solar system
+        // Updates name of a solar system
+        // Make sure it exists
         const foundIt = !!rawData.find(x => x.id == solarSystemId)
         if (foundIt) {
             // Update it
@@ -169,7 +157,6 @@ module.exports = {
             rawData.forEach((ss) => {
                 if (ss.id == solarSystemId) {
                     // Match - update it and add to array and object
-                    console.log(`Adding: ${ss.id}`)
                     ss.name = solarSystemName
                     ss.totalWeight = calculateTotalWeight(ss.entities)
                     updatedRawData.push(ss)
@@ -185,6 +172,7 @@ module.exports = {
             return ([false, undefined, undefined])
         }
     },
+
     getSolarSystemWeight(solarSystemId, rawData) {
         // Return the id, name and weight of the solar system
         // Make sure it exists
@@ -196,7 +184,6 @@ module.exports = {
                 if (ss.id == solarSystemId) {
                     // Match
                     updatedObject = Object.assign({}, ss)
-                    console.log(`Calculating: ${updatedObject.id}`)
                     updatedObject.totalWeight = calculateTotalWeight(updatedObject.entities)
                     delete updatedObject.entities
                 }

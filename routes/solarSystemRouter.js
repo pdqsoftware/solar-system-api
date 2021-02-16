@@ -23,7 +23,6 @@ solarSystemRouter.route('/')
 })
 // Called by next() and useful for setting up the body of the responce
 .get((req, res, next) => {
-    console.log(`raw: ${rawData}`)
     const ssData = utils.getSolarSystems('', rawData)
     res.setHeader('Content-Type', 'application/json')
     res.json(ssData)
@@ -61,7 +60,6 @@ solarSystemRouter.route('/:solarSystemId')
 
 // This handles ALL calls, no matter what the verb, for the /solarSystem/:solarSystemId type API
 .all((req, res, next) => {
-    // console.log(`Solar System ID: ${req.params.solarSystemId}`)
     console.log(`Solar System ID: ${req.params.solarSystemId}`)
     next()
 })
@@ -208,7 +206,6 @@ solarSystemRouter.route('/:solarSystemId/planet')
         "weight": req.body.weight,
         "type": req.body.type
     }
-    console.log(`planet type: ${req.body.type}`)
     const newData = utils.addPlanet(req.params.solarSystemId, newPlanet, rawData)
     if (newData[0]) {
         res.setHeader('Content-Type', 'application/json')
@@ -301,42 +298,16 @@ solarSystemRouter.route('/:solarSystemId/planet/:planetId')
             res.setHeader('Content-Type', 'application/json')
             res.json(newData[1])
         }
-        
     } else {
         // Body/parameter mismatch
         res.statusCode = 400
         res.setHeader('Content-Type', 'application/json')
         res.json({"Error": "Mismatch!  Body Id: '" + req.body.id + "', URL parameter: '" + planetId + "'"})
     }
-    
-
     // res.write('Updating the planet: ' + req.params.planetId + '\n')
     // res.write('Within the solar system: ' + req.params.solarSystemId + '\n')
     // res.end('With name: ' + req.body.name + ' and weight: ' + req.body.weight)
 })
-
-/*
-
-if (req.body.id == ssId) {
-        // Body matches request parameter
-        const updatedData = utils.updateSolarSystem(ssId, req.body.name, rawData)
-        if (updatedData[0]) {
-            rawData = updatedData[1]
-            res.setHeader('Content-Type', 'application/json')
-            res.json(updatedData[2])
-        } else {
-            res.statusCode = 404
-            res.setHeader('Content-Type', 'application/json')
-            res.json({"Error": "Error updating solar system '" + ssId + "', it does not exist"})
-        }
-    } else {
-        // Body/parameter mismatch
-        res.statusCode = 400
-        res.setHeader('Content-Type', 'application/json')
-        res.json({"Error": "Mismatch!  Body Id: '" + req.body.id + "', URL parameter: '" + ssId + "'"})
-    }
-
-*/
 
 .delete((req, res, next) => {
     //Delete single planet from seciied solar system
