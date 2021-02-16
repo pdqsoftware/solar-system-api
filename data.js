@@ -37,7 +37,7 @@ const rawData = [
         "entities": [
             {
                 "id": "41",
-                "name": "Planet Zog",
+                "name": "Hatherwasium",
                 "weight": 444,
                 "type": "planet"
             },

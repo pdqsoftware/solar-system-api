@@ -201,13 +201,14 @@ solarSystemRouter.route('/:solarSystemId/planet')
 
 .post((req, res, next) => {
     // Will contain a body in json format
-    // The body must include id, name,weight and type properties
+    // The body must include id, name, weight and type properties
     const newPlanet = {
         "id": req.body.id,
         "name": req.body.name,
         "weight": req.body.weight,
-        "type": "planet"
+        "type": req.body.type
     }
+    console.log(`planet type: ${req.body.type}`)
     const newData = utils.addPlanet(req.params.solarSystemId, newPlanet, rawData)
     if (newData[0]) {
         res.setHeader('Content-Type', 'application/json')
@@ -223,7 +224,7 @@ solarSystemRouter.route('/:solarSystemId/planet')
 })
 
 .put((req, res, next) => {
-    // Add a status code which will overwrite the one set earlier
+    // Change planet information - name and weight
     res.statusCode = 403
     res.end('PUT operation not supported on /solarSystem/' + req.params.solarSystemId + '/planet')
 })
@@ -247,7 +248,7 @@ solarSystemRouter.route('/:solarSystemId/planet')
 })
 
 
-// ALL THE ABOVE ARE COMPLETE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 
 
@@ -271,9 +272,7 @@ solarSystemRouter.route('/:solarSystemId/planet/:planetId')
         res.setHeader('Content-Type', 'application/json')
         res.json({"Error": newData[1]})
     }
-
-
-    res.end('Will send details of planet + \'' + req.params.planetId + '\' in solar system \'' + req.params.solarSystemId + '\' to you.')
+    // res.end('Will send details of planet + \'' + req.params.planetId + '\' in solar system \'' + req.params.solarSystemId + '\' to you.')
 })
 
 .post((req, res, next) => {
@@ -282,48 +281,112 @@ solarSystemRouter.route('/:solarSystemId/planet/:planetId')
     res.end('POST operation not supported on /solarSystem/' + req.params.solarSystemId + '/planet/' + req.params.planetId)
 })
 
+
+// ALL THE ABOVE ARE COMPLETE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
 .put((req, res, next) => {
-    // Use res.write() as many times as required to write long messages
-    res.write('Updating the planet: ' + req.params.planetId + '\n')
-    res.write('Within the solar system: ' + req.params.solarSystemId + '\n')
-    res.end('With name: ' + req.body.name + ' and weight: ' + req.body.weight)
+    // Update planet name or weight
+    const planetId = req.params.planetId
+    if (req.body.id == planetId) {
+        const ssId = req.params.solarSystemId
+        const planetId = req.params.planetId
+        const newData = utils.updatePlanet(ssId, planetId, req.body, rawData)
+        if (newData[0]) {
+            res.setHeader('Content-Type', 'application/json')
+            res.json(newData[1])
+        } else {
+            res.statusCode = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json(newData[1])
+        }
+        
+    } else {
+        // Body/parameter mismatch
+        res.statusCode = 400
+        res.setHeader('Content-Type', 'application/json')
+        res.json({"Error": "Mismatch!  Body Id: '" + req.body.id + "', URL parameter: '" + planetId + "'"})
+    }
+    
+
+    // res.write('Updating the planet: ' + req.params.planetId + '\n')
+    // res.write('Within the solar system: ' + req.params.solarSystemId + '\n')
+    // res.end('With name: ' + req.body.name + ' and weight: ' + req.body.weight)
 })
+
+/*
+
+if (req.body.id == ssId) {
+        // Body matches request parameter
+        const updatedData = utils.updateSolarSystem(ssId, req.body.name, rawData)
+        if (updatedData[0]) {
+            rawData = updatedData[1]
+            res.setHeader('Content-Type', 'application/json')
+            res.json(updatedData[2])
+        } else {
+            res.statusCode = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({"Error": "Error updating solar system '" + ssId + "', it does not exist"})
+        }
+    } else {
+        // Body/parameter mismatch
+        res.statusCode = 400
+        res.setHeader('Content-Type', 'application/json')
+        res.json({"Error": "Mismatch!  Body Id: '" + req.body.id + "', URL parameter: '" + ssId + "'"})
+    }
+
+*/
 
 .delete((req, res, next) => {
-    // Return a simple response
-    res.end('Deleting planet: ' + req.params.planetId + ' in solar system: ' + req.params.solarSystemId)
+    //Delete single planet from seciied solar system
+    const ssId = req.params.solarSystemId
+    const planetId = req.params.planetId
+    const newData = utils.deletePlanet(ssId, planetId, rawData)
+
+    if (newData[0]) {
+        // If success then update raw data and nothing else
+        rawData = newData[1]
+        res.end()
+    } else {
+        res.statusCode = 404
+        res.setHeader('Content-Type', 'application/json')
+        res.json({"Error": newData[1]})
+    }
+    // res.end('Deleting planet: ' + req.params.planetId + ' in solar system: ' + req.params.solarSystemId)
 })
 
 
-solarSystemRouter.route('/:solarSystemId/planet/:planetId/weight')
+// solarSystemRouter.route('/:solarSystemId/planet/:planetId/weight')
 
-// This handles ALL calls, no matter what the verb, for the /solarSystem/:solarSystemId/planet/:planetId type API
-.all((req, res, next) => {
-    console.log(`Solar System ID: ${req.params.solarSystemId}`)
-    console.log(`Planet ID: ${req.params.planetId}`)
-    next()
-})
-.get((req, res, next) => {
-    res.write('Planet: ' + req.params.planetId + '\n')
-    res.write('in Solar System: ' + req.params.solarSystemId + '\n')
-    res.end('Has a weight of ' + 'XXXXX tons' )
-})
-.post((req, res, next) => {
-    // Add a status code which will overwrite the one set earlier
-    res.statusCode = 403
-    res.end('POST operation not supported on /solarSystem/' + req.params.solarSystemId + '/planet/' + req.params.planetId + '/weight')
-})
-.put((req, res, next) => {
-     // Add a status code which will overwrite the one set earlier
-     res.statusCode = 403
-     res.end('PUT operation not supported on /solarSystem/' + req.params.solarSystemId + '/planet/' + req.params.planetId + '/weight')
-})
-.delete((req, res, next) => {
-    // Return a simple response
-    res.statusCode = 403
-     res.end('DELETE operation not supported on /solarSystem/' + req.params.solarSystemId + '/planet/' + req.params.planetId + '/weight')
-})
+// // This handles ALL calls, no matter what the verb, for the /solarSystem/:solarSystemId/planet/:planetId type API
+// .all((req, res, next) => {
+//     console.log(`Solar System ID: ${req.params.solarSystemId}`)
+//     console.log(`Planet ID: ${req.params.planetId}`)
+//     next()
+// })
+// .get((req, res, next) => {
+//     res.write('Planet: ' + req.params.planetId + '\n')
+//     res.write('in Solar System: ' + req.params.solarSystemId + '\n')
+//     res.end('Has a weight of ' + 'XXXXX tons' )
+// })
+// .post((req, res, next) => {
+//     // Add a status code which will overwrite the one set earlier
+//     res.statusCode = 403
+//     res.end('POST operation not supported on /solarSystem/' + req.params.solarSystemId + '/planet/' + req.params.planetId + '/weight')
+// })
+// .put((req, res, next) => {
+//      // Add a status code which will overwrite the one set earlier
+//      res.statusCode = 403
+//      res.end('PUT operation not supported on /solarSystem/' + req.params.solarSystemId + '/planet/' + req.params.planetId + '/weight')
+// })
+// .delete((req, res, next) => {
+//     // Return a simple response
+//     res.statusCode = 403
+//      res.end('DELETE operation not supported on /solarSystem/' + req.params.solarSystemId + '/planet/' + req.params.planetId + '/weight')
+// })
 
 
-// Remember to export this module
+
+// Export this module
 module.exports = solarSystemRouter

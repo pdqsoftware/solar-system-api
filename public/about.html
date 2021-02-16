@@ -1,15 +1,45 @@
 <html>
-    <title>This is an about.html file</title>
+    <title>About Solar System API</title>
     <head>
-        <link rel="stylesheet" href="./css/about.css">
+        <link rel="stylesheet" href="css/about.css">
     </head>
 
     <body>
-        <h1>About.html</h1>
-        <p>This file will contain instructions on how to use the API</p>
-        <div classname="instructions">
-            <p>1. Da da da</p>
-            <p>2. La la la</p>
+        <h1 class="h1">About.html
+            <div id="about">
+                <a href="https://docs.google.com/document/d/1aCuJMZEd8abNlCFdLxLUOO-B5kKcWmm32FkuTS-wAwo/edit?usp=sharing" target="_blank">?</a>
+            </div>
+        </h1>
+        <p>This file contains instructions on how to use the API</p>
+        <p>The allowed verbs are described below:</p>
+        <div class="instructions">
+            <h3>GET</h3>
+            <div class="verb">
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem</b> - returns all data for all solar systems</p>
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem/id</b> - returns all data for solar systems with an id of 'id'</p>
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem/id/planet/pid</b> - returns data for planet 'pid' in the solar systems with an id of 'id'</p>
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem/id/weight</b> - returns the weight of solar systems with an id of 'id'</p>
+            </div>
+            <h3>PUT</h3>
+            <div class="verb">
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem/id</b> - changes the name of solar system with an id of 'id' (body required)</p>
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem/id/planet</b> - changes the name and/or weight of a planet in solar system with an id of 'id' (body required)</p>
+            </div>
+            <h3>POST</h3>
+            <div class="verb">
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem</b> - adds a new solar system dependent on request body (body required)</p>
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem/id/planet</b> - adds a new planet to solar system with an id of 'id' (body required)</p>
+            </div>
+            <h3>DELETE</h3>
+            <div class="verb">
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem</b> - deletes all data for all solar systems</p>
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem/id</b> - deletes all data for solar systems with an id of 'id'</p>
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem/id/planet</b> - deletes all planets for solar systems with an id of 'id'</p>
+                <p><b>https://pdqsoftware-solar-system-api.herokuapp.com/solarsystem/id/planet/pid</b> - deletes planet 'pid' within the solar systems with an id of 'id'</p>
+            </div>
         </div>
     </body>
+    <footer>
+        <p class="copyright">All contents &copy; Paul Pritchard 2021</p>
+    </footer>
 </html>

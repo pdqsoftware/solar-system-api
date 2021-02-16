@@ -1,6 +1,53 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+body {
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #333;
+    background-color: cornflowerblue;
+    padding: 4rem;
+}
+
+footer {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    text-align: right;
+}
+
 .instructions {
-    font: 300;
-    color: blue;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: firebrick;
     background-color: aquamarine;
     display: inline;
+}
+
+.verb {
+    padding-left: 1rem;
+    color: darkslategrey;
+}
+
+.copyright {
+    padding: 0px 100px;
+    color:mediumblue;
+    font-size: 0.8rem;
+}
+
+#about {
+    display: inline-block;
+    cursor: pointer;
+    text-align: right;
+    font-family: 'Roboto',sans-serif;
+    font-weight:300;
+    padding-left: 20%;
+    font-size: 32px;
+    text-decoration: none;
 }
