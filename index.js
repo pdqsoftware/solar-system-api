@@ -6,17 +6,14 @@ const bodyParser = require('body-parser')
 // Import the Solar System router file
 const solarSystemRouter = require('./routes/solarSystemRouter')
 
-// const hostname = 'localhost'  // Need to change??
+// const hostname = 'localhost'  // Need to remove before Heroku hosting
 const port = process.env.PORT || 3030
 
 const app = express()
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 
-// let rawData = require('./data');
-
 // Tell app to use solarSystemRouter when processing calls requesting /solarSystem
-// So all of the app functions below can be removed and placed inside dishRouter.js
 app.use('/solarSystem', solarSystemRouter)
 
 // Static files come from the root directory + /public
@@ -34,6 +31,6 @@ app.use((req, res, next) => {
 // Using Express has the added advantage of not requiring the http module
 // app.listen(port, hostname, () => {
 app.listen(port, () => {
-    // console.log(`Solar System API server running at http://${hostname}:${port}`)
+    // console.log(`Solar System API server running at http://${hostname}:${port}`)  // Need to remove before Heroku hosting
     console.log(`Solar System API server running on port ${port}`)
 })
